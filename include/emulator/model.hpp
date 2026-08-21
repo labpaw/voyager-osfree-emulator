@@ -28,3 +28,4 @@ enum class Status { ready, complete, invalid_input, job_capacity, arithmetic_ove
 const char* status_name(Status status);
 Status validate(const Config& config, Tick& work_bound, Tick& jobs_bound);
 }
+namespace emu { void assign_priorities(Config& config); }

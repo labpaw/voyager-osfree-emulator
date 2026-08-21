@@ -41,3 +41,15 @@ Status validate(const Config& c, Tick& work, Tick& jobs) {
     return Status::ready;
 }
 }
+namespace emu {
+void assign_priorities(Config& c) {
+    for (std::size_t i = 0; i < c.count; ++i) {
+        auto& t = c.tasks[i];
+        t.priority = 0;
+        for (std::size_t j = 0; j < c.count; ++j) {
+            const auto& other = c.tasks[j];
+            if (other.period < t.period || (other.period == t.period && other.id < t.id)) ++t.priority;
+        }
+    }
+}
+}

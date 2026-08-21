@@ -17,6 +17,12 @@ void validation() {
 }
 int main() {
     validation();
+    emu::Config ties; ties.count = 3;
+    ties.tasks[0] = {8, 10, 10, 1, 0, 0, 0};
+    ties.tasks[1] = {2, 10, 10, 1, 0, 0, 0};
+    ties.tasks[2] = {9, 5, 5, 1, 0, 0, 0};
+    emu::assign_priorities(ties);
+    CHECK(ties.tasks[0].priority == 2 && ties.tasks[1].priority == 1 && ties.tasks[2].priority == 0);
     emu::Tick n = 0;
     CHECK(emu::checked_add(2, 3, n) && n == 5);
     CHECK(!emu::checked_add(std::numeric_limits<emu::Tick>::max(), 1, n));
