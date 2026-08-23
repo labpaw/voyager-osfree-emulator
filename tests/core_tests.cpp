@@ -1,4 +1,5 @@
 #include "emulator/model.hpp"
+#include "emulator/scheduler.hpp"
 #include <cstdlib>
 #include <iostream>
 #include <limits>
@@ -15,7 +16,21 @@ void validation() {
     c.count = 1; c.tasks[0].deadline = std::numeric_limits<emu::Tick>::max();
     CHECK(emu::validate(c, w, j) == emu::Status::arithmetic_overflow);
 }
+void single_stream() {
+    static emu::Scheduler s;
+    emu::Config c; c.count = 1; c.horizon = 12;
+    c.tasks[0] = {1, 5, 5, 2, 0, 0, 0};
+    CHECK(s.init(c) == emu::Status::ready);
+    unsigned events = 0;
+    while (s.status == emu::Status::ready) {
+        const auto e = s.step();
+        if (e.valid) { ++events; CHECK(e.job.completion - e.job.release == 2); }
+    }
+    CHECK(s.status == emu::Status::complete && events == 3);
+    CHECK(s.metrics.busy == 6 && s.metrics.idle == 6 && s.metrics.missed == 0);
+}
 int main() {
+    single_stream();
     validation();
     emu::Config ties; ties.count = 3;
     ties.tasks[0] = {8, 10, 10, 1, 0, 0, 0};
