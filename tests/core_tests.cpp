@@ -29,7 +29,23 @@ void single_stream() {
     CHECK(s.status == emu::Status::complete && events == 3);
     CHECK(s.metrics.busy == 6 && s.metrics.idle == 6 && s.metrics.missed == 0);
 }
+void backlog_and_drain() {
+    static emu::Scheduler s;
+    emu::Config c; c.count = 1; c.horizon = 6;
+    c.tasks[0] = {1, 2, 2, 3, 0, 0, 0};
+    CHECK(s.init(c) == emu::Status::ready);
+    unsigned events = 0;
+    while (s.status == emu::Status::ready) {
+        auto e = s.step();
+        if (e.valid) { CHECK(e.job.sequence == events++); CHECK(e.job.missed); }
+    }
+    CHECK(s.metrics.released == 3 && s.metrics.completed == 3 && events == 3);
+    CHECK(s.metrics.missed == 3 && s.metrics.backlog == 1);
+    CHECK(s.metrics.end == 9 && s.metrics.busy == 6 && s.metrics.drain_busy == 3);
+    CHECK(s.task_metrics[0].response_sum == 12 && s.metrics.max_response == 5);
+}
 int main() {
+    backlog_and_drain();
     single_stream();
     validation();
     emu::Config ties; ties.count = 3;
