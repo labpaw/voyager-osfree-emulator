@@ -44,7 +44,33 @@ void backlog_and_drain() {
     CHECK(s.metrics.end == 9 && s.metrics.busy == 6 && s.metrics.drain_busy == 3);
     CHECK(s.task_metrics[0].response_sum == 12 && s.metrics.max_response == 5);
 }
+void boundaries_and_blocking() {
+    static emu::Scheduler s;
+    emu::Config c; c.count = 1; c.horizon = 1;
+    c.tasks[0] = {1, 5, 5, 5, 0, 0, 0};
+    CHECK(s.init(c) == emu::Status::ready);
+    while (s.status == emu::Status::ready) s.step();
+    CHECK(s.metrics.missed == 0 && s.metrics.end == 5);
+    c.tasks[0].cost = 6;
+    CHECK(s.init(c) == emu::Status::ready);
+    while (s.status == emu::Status::ready) s.step();
+    CHECK(s.metrics.missed == 1 && s.metrics.end == 6);
+    c.count = 2; c.horizon = 10;
+    c.tasks[0] = {1, 5, 5, 1, 1, 0, 0};
+    c.tasks[1] = {2, 20, 20, 7, 0, 0, 0};
+    CHECK(s.init(c) == emu::Status::ready);
+    unsigned events = 0;
+    while (s.status == emu::Status::ready) {
+        const auto e = s.step();
+        if (!e.valid) continue;
+        if (events == 0) CHECK(e.job.task == 1 && e.job.first_start == 0 && e.job.completion == 7);
+        if (events == 1) CHECK(e.job.task == 0 && e.job.release == 1 && e.job.first_start == 7 && e.job.completion == 8 && e.job.missed);
+        ++events;
+    }
+    CHECK(events == 3 && s.metrics.missed == 1);
+}
 int main() {
+    boundaries_and_blocking();
     backlog_and_drain();
     single_stream();
     validation();
