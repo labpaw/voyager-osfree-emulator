@@ -69,7 +69,21 @@ void boundaries_and_blocking() {
     }
     CHECK(events == 3 && s.metrics.missed == 1);
 }
+void capacity_and_idle() {
+    static emu::Scheduler s;
+    emu::Config c; c.count = 1; c.horizon = 3;
+    c.tasks[0] = {1, 10, 10, 1, 5, 0, 0};
+    CHECK(s.init(c) == emu::Status::ready);
+    while (s.status == emu::Status::ready) s.step();
+    CHECK(s.metrics.idle == 3 && s.metrics.completed == 0);
+    c.horizon = 1030; c.tasks[0] = {1, 1, 1, 2000, 0, 0, 0};
+    CHECK(s.init(c) == emu::Status::ready);
+    while (s.status == emu::Status::ready) s.step();
+    CHECK(s.status == emu::Status::job_capacity && s.metrics.released == emu::max_jobs);
+    CHECK(s.metrics.unfinished == emu::max_jobs && s.metrics.completed == 0);
+}
 int main() {
+    capacity_and_idle();
     boundaries_and_blocking();
     backlog_and_drain();
     single_stream();
