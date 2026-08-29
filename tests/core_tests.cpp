@@ -1,5 +1,6 @@
 #include "emulator/model.hpp"
 #include "emulator/scheduler.hpp"
+#include "emulator/memory.hpp"
 #include <cstdlib>
 #include <iostream>
 #include <limits>
@@ -82,7 +83,17 @@ void capacity_and_idle() {
     CHECK(s.status == emu::Status::job_capacity && s.metrics.released == emu::max_jobs);
     CHECK(s.metrics.unfinished == emu::max_jobs && s.metrics.completed == 0);
 }
+void static_regions() {
+    static emu::StaticArena arena;
+    std::array<std::size_t, emu::max_tasks> sizes{}; sizes[0] = 9; sizes[1] = 8;
+    CHECK(arena.init(sizes, 2, 24));
+    CHECK(arena.reserved == 24 && arena.payload == 17 && arena.regions[1].offset == 16);
+    CHECK(!arena.init(sizes, 2, 23));
+    CHECK(!arena.access(0, 0, 1));
+    CHECK(arena.init(sizes, 2, 24));
+}
 int main() {
+    static_regions();
     capacity_and_idle();
     boundaries_and_blocking();
     backlog_and_drain();
