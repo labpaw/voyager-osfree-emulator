@@ -91,6 +91,16 @@ void static_regions() {
     CHECK(!arena.init(sizes, 2, 23));
     CHECK(!arena.access(0, 0, 1));
     CHECK(arena.init(sizes, 2, 24));
+    CHECK(arena.write(0, 8, 42));
+    CHECK(!arena.write(0, 9, 99) && !arena.access(2, 0, 1));
+    CHECK(!arena.access(0, 8, 2) && !arena.access(0, std::numeric_limits<std::size_t>::max(), 1));
+    std::uint8_t value = 0;
+    CHECK(arena.read(0, 8, value) && value == 42);
+    CHECK(arena.read(1, 0, value) && value == 0);
+    static emu::Scheduler sched;
+    emu::Config c; c.count = 1; c.horizon = 5; c.budget = 7;
+    c.tasks[0] = {1, 5, 5, 1, 0, 8, 0};
+    CHECK(sched.init(c) == emu::Status::memory_rejected && sched.metrics.released == 0);
 }
 int main() {
     static_regions();

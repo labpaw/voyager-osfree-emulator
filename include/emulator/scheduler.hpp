@@ -1,5 +1,6 @@
 #pragma once
 #include "emulator/model.hpp"
+#include "emulator/memory.hpp"
 namespace emu {
 struct Job {
     std::size_t task = 0;
@@ -27,6 +28,7 @@ public:
     std::array<TaskMetrics, max_tasks> task_metrics{};
     Status status = Status::invalid_input;
     Tick now = 0;
+    StaticArena memory;
 private:
     std::array<Job, max_jobs> jobs{};
     std::array<Tick, max_tasks> next_release{}, sequence{};
