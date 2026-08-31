@@ -2,6 +2,8 @@
 #include "emulator/scheduler.hpp"
 #include "emulator/memory.hpp"
 #include <cstdlib>
+#include <new>
+#include "allocation_guard.hpp"
 #include <iostream>
 #include <limits>
 #define CHECK(x) do { if (!(x)) { std::cerr << __FILE__ << ':' << __LINE__ << ": " #x "\n"; std::exit(1); } } while (false)
@@ -103,6 +105,7 @@ void static_regions() {
     CHECK(sched.init(c) == emu::Status::memory_rejected && sched.metrics.released == 0);
 }
 int main() {
+    watch_allocations = true;
     static_regions();
     capacity_and_idle();
     boundaries_and_blocking();
@@ -118,4 +121,12 @@ int main() {
     emu::Tick n = 0;
     CHECK(emu::checked_add(2, 3, n) && n == 5);
     CHECK(!emu::checked_add(std::numeric_limits<emu::Tick>::max(), 1, n));
+    watch_allocations = false;
+    CHECK(watched_allocations == 0);
+    watch_allocations = true;
+    void* p = ::operator new(8);
+    void* q = ::operator new[](16, std::align_val_t(16), std::nothrow);
+    watch_allocations = false;
+    ::operator delete(p); ::operator delete[](q, std::align_val_t(16));
+    CHECK(watched_allocations == 2);
 }
