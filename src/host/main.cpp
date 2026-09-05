@@ -1,4 +1,5 @@
 #include "io.hpp"
+#include "export.hpp"
 #include "emulator/scheduler.hpp"
 #include <filesystem>
 #include <iostream>
@@ -40,6 +41,7 @@ int main(int argc, char** argv) {
             }
         }
         jobs.close();
+        host::export_schedule(core, out, id, detailed);
         std::cout << id << ": " << emu::status_name(core.status) << ", completed=" << core.metrics.completed << ", missed=" << core.metrics.missed << '\n';
         if (core.status == emu::Status::memory_rejected) return 3;
         return core.status == emu::Status::complete ? 0 : 4;

@@ -9,10 +9,10 @@ Status Scheduler::init(const Config& input) {
     status = validate(config, work, admitted);
     if (status != Status::ready) return status;
     stop_bound = config.horizon + work;
+    assign_priorities(config);
     std::array<std::size_t, max_tasks> maxima{};
     for (std::size_t i = 0; i < config.count; ++i) maxima[i] = config.tasks[i].memory;
     if (!memory.init(maxima, config.count, config.budget)) return status = Status::memory_rejected;
-    assign_priorities(config);
     for (std::size_t i = 0; i < config.count; ++i) {
         next_release[i] = config.tasks[i].offset;
         has_release[i] = next_release[i] < config.horizon;
