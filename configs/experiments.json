@@ -2641,6 +2641,187 @@
       "seed": 10,
       "nominal": 1.1,
       "smoke": false
+    },
+    {
+      "id": "e2_c2_o0",
+      "group": "e2",
+      "kind": "schedule",
+      "input": "configs/generated/e2_c2_o0.csv",
+      "horizon": 10000,
+      "budget": 4096,
+      "contiguous_cost": 2,
+      "phase": 0,
+      "smoke": true
+    },
+    {
+      "id": "e2_c2_o1",
+      "group": "e2",
+      "kind": "schedule",
+      "input": "configs/generated/e2_c2_o1.csv",
+      "horizon": 10000,
+      "budget": 4096,
+      "contiguous_cost": 2,
+      "phase": 1,
+      "smoke": true
+    },
+    {
+      "id": "e2_c4_o0",
+      "group": "e2",
+      "kind": "schedule",
+      "input": "configs/generated/e2_c4_o0.csv",
+      "horizon": 10000,
+      "budget": 4096,
+      "contiguous_cost": 4,
+      "phase": 0,
+      "smoke": true
+    },
+    {
+      "id": "e2_c4_o1",
+      "group": "e2",
+      "kind": "schedule",
+      "input": "configs/generated/e2_c4_o1.csv",
+      "horizon": 10000,
+      "budget": 4096,
+      "contiguous_cost": 4,
+      "phase": 1,
+      "smoke": true
+    },
+    {
+      "id": "e2_c8_o0",
+      "group": "e2",
+      "kind": "schedule",
+      "input": "configs/generated/e2_c8_o0.csv",
+      "horizon": 10000,
+      "budget": 4096,
+      "contiguous_cost": 8,
+      "phase": 0,
+      "smoke": true
+    },
+    {
+      "id": "e2_c8_o1",
+      "group": "e2",
+      "kind": "schedule",
+      "input": "configs/generated/e2_c8_o1.csv",
+      "horizon": 10000,
+      "budget": 4096,
+      "contiguous_cost": 8,
+      "phase": 1,
+      "smoke": true
+    },
+    {
+      "id": "e2_c12_o0",
+      "group": "e2",
+      "kind": "schedule",
+      "input": "configs/generated/e2_c12_o0.csv",
+      "horizon": 10000,
+      "budget": 4096,
+      "contiguous_cost": 12,
+      "phase": 0,
+      "smoke": true
+    },
+    {
+      "id": "e2_c12_o1",
+      "group": "e2",
+      "kind": "schedule",
+      "input": "configs/generated/e2_c12_o1.csv",
+      "horizon": 10000,
+      "budget": 4096,
+      "contiguous_cost": 12,
+      "phase": 1,
+      "smoke": true
+    },
+    {
+      "id": "sensitivity_u20_zero",
+      "group": "sensitivity",
+      "kind": "schedule",
+      "input": "configs/generated/sensitivity_u20_zero.csv",
+      "horizon": 200000,
+      "budget": 4096,
+      "nominal": 0.2,
+      "seed": 1,
+      "smoke": true
+    },
+    {
+      "id": "sensitivity_u20_staggered",
+      "group": "sensitivity",
+      "kind": "schedule",
+      "input": "configs/generated/sensitivity_u20_staggered.csv",
+      "horizon": 200000,
+      "budget": 4096,
+      "nominal": 0.2,
+      "seed": 1,
+      "smoke": true
+    },
+    {
+      "id": "sensitivity_u80_zero",
+      "group": "sensitivity",
+      "kind": "schedule",
+      "input": "configs/generated/sensitivity_u80_zero.csv",
+      "horizon": 200000,
+      "budget": 4096,
+      "nominal": 0.8,
+      "seed": 1,
+      "smoke": true
+    },
+    {
+      "id": "sensitivity_u80_staggered",
+      "group": "sensitivity",
+      "kind": "schedule",
+      "input": "configs/generated/sensitivity_u80_staggered.csv",
+      "horizon": 200000,
+      "budget": 4096,
+      "nominal": 0.8,
+      "seed": 1,
+      "smoke": true
+    },
+    {
+      "id": "sensitivity_u110_zero",
+      "group": "sensitivity",
+      "kind": "schedule",
+      "input": "configs/generated/sensitivity_u110_zero.csv",
+      "horizon": 200000,
+      "budget": 4096,
+      "nominal": 1.1,
+      "seed": 1,
+      "smoke": true
+    },
+    {
+      "id": "sensitivity_u110_staggered",
+      "group": "sensitivity",
+      "kind": "schedule",
+      "input": "configs/generated/sensitivity_u110_staggered.csv",
+      "horizon": 200000,
+      "budget": 4096,
+      "nominal": 1.1,
+      "seed": 1,
+      "smoke": true
+    },
+    {
+      "id": "e0_single",
+      "group": "e0",
+      "kind": "schedule",
+      "input": "configs/fixtures/single.csv",
+      "horizon": 12,
+      "budget": 4096,
+      "smoke": true
+    },
+    {
+      "id": "e0_blocking",
+      "group": "e0",
+      "kind": "schedule",
+      "input": "configs/fixtures/blocking.csv",
+      "horizon": 10,
+      "budget": 4096,
+      "smoke": true
+    },
+    {
+      "id": "e0_ties",
+      "group": "e0",
+      "kind": "schedule",
+      "input": "configs/fixtures/ties.csv",
+      "horizon": 1,
+      "budget": 4096,
+      "smoke": true
     }
   ]
 }
