@@ -17,3 +17,24 @@ private:
     bool admitted = false;
 };
 }
+namespace emu {
+constexpr std::size_t max_blocks = 32;
+enum class Allocation { ok, invalid_request, capacity, fragmentation, descriptors, invalid_free };
+const char* allocation_name(Allocation reason);
+struct Block { std::size_t offset = 0, bytes = 0; bool used = false; };
+struct AllocationResult { Allocation reason = Allocation::invalid_request; std::size_t offset = 0; };
+class DynamicArena {
+public:
+    bool init(std::size_t budget);
+    AllocationResult allocate(std::size_t bytes);
+    Allocation release(std::size_t offset);
+    std::size_t free_bytes() const;
+    std::size_t largest_free() const;
+    std::size_t occupied() const { return budget - free_bytes(); }
+    std::size_t blocks_inspected = 0, splits = 0, coalesces = 0;
+private:
+    alignas(alignment) std::array<std::uint8_t, arena_capacity> data{};
+    std::array<Block, max_blocks> blocks{};
+    std::size_t count = 0, budget = 0;
+};
+}

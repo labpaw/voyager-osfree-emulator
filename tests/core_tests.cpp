@@ -104,7 +104,18 @@ void static_regions() {
     c.tasks[0] = {1, 5, 5, 1, 0, 8, 0};
     CHECK(sched.init(c) == emu::Status::memory_rejected && sched.metrics.released == 0);
 }
+void first_fit_split() {
+    static emu::DynamicArena arena;
+    CHECK(arena.init(32));
+    auto a = arena.allocate(9); auto b = arena.allocate(16);
+    CHECK(a.reason == emu::Allocation::ok && a.offset == 0);
+    CHECK(b.reason == emu::Allocation::ok && b.offset == 16);
+    CHECK(arena.occupied() == 32 && arena.free_bytes() == 0 && arena.splits == 1);
+    CHECK(arena.allocate(1).reason == emu::Allocation::capacity);
+    CHECK(arena.allocate(0).reason == emu::Allocation::invalid_request);
+}
 int main() {
+    first_fit_split();
     watch_allocations = true;
     static_regions();
     capacity_and_idle();
