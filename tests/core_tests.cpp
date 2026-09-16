@@ -114,7 +114,22 @@ void first_fit_split() {
     CHECK(arena.allocate(1).reason == emu::Allocation::capacity);
     CHECK(arena.allocate(0).reason == emu::Allocation::invalid_request);
 }
+void reuse_and_coalesce() {
+    static emu::DynamicArena arena;
+    CHECK(arena.init(64));
+    auto a = arena.allocate(16); auto b = arena.allocate(16); auto c = arena.allocate(16);
+    CHECK(arena.release(b.offset) == emu::Allocation::ok);
+    CHECK(arena.release(b.offset) == emu::Allocation::invalid_free);
+    auto d = arena.allocate(8); CHECK(d.offset == b.offset);
+    CHECK(arena.release(7) == emu::Allocation::invalid_free);
+    CHECK(arena.release(a.offset) == emu::Allocation::ok);
+    CHECK(arena.release(c.offset) == emu::Allocation::ok);
+    CHECK(arena.release(d.offset) == emu::Allocation::ok);
+    CHECK(arena.free_bytes() == 64 && arena.largest_free() == 64 && arena.coalesces == arena.splits);
+    CHECK(arena.init(32) && arena.occupied() == 0 && arena.blocks_inspected == 0);
+}
 int main() {
+    reuse_and_coalesce();
     first_fit_split();
     watch_allocations = true;
     static_regions();

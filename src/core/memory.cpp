@@ -79,3 +79,22 @@ AllocationResult DynamicArena::allocate(std::size_t request) {
     return {free_bytes() >= bytes ? Allocation::fragmentation : Allocation::capacity, 0};
 }
 }
+namespace emu {
+Allocation DynamicArena::release(std::size_t offset) {
+    for (std::size_t i = 0; i < count; ++i) {
+        ++blocks_inspected;
+        if (blocks[i].offset != offset || !blocks[i].used) continue;
+        blocks[i].used = false;
+        // Merge all adjacent holes, including either neighbour of this block.
+        for (std::size_t j = 0; j+1 < count;) {
+            if (!blocks[j].used && !blocks[j+1].used) {
+                blocks[j].bytes += blocks[j+1].bytes;
+                for (std::size_t k = j+1; k+1 < count; ++k) blocks[k] = blocks[k+1];
+                --count; ++coalesces;
+            } else ++j;
+        }
+        return Allocation::ok;
+    }
+    return Allocation::invalid_free;
+}
+}
