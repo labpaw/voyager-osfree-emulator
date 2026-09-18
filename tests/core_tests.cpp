@@ -128,10 +128,27 @@ void reuse_and_coalesce() {
     CHECK(arena.free_bytes() == 64 && arena.largest_free() == 64 && arena.coalesces == arena.splits);
     CHECK(arena.init(32) && arena.occupied() == 0 && arena.blocks_inspected == 0);
 }
+void fragmentation_and_descriptors() {
+    static emu::DynamicArena arena;
+    CHECK(arena.init(256));
+    std::array<std::size_t,4> handles{};
+    for (auto& h : handles) { const auto a = arena.allocate(64); CHECK(a.reason == emu::Allocation::ok); h = a.offset; }
+    CHECK(arena.release(handles[0]) == emu::Allocation::ok);
+    CHECK(arena.release(handles[2]) == emu::Allocation::ok);
+    CHECK(arena.free_bytes() == 128 && arena.largest_free() == 64);
+    CHECK(arena.allocate(96).reason == emu::Allocation::fragmentation);
+    CHECK(arena.release(handles[1]) == emu::Allocation::ok && arena.release(handles[3]) == emu::Allocation::ok);
+    CHECK(arena.largest_free() == 256);
+    CHECK(arena.init(512));
+    for (std::size_t i = 0; i < emu::max_blocks-1; ++i) CHECK(arena.allocate(8).reason == emu::Allocation::ok);
+    CHECK(arena.allocate(8).reason == emu::Allocation::descriptors);
+    CHECK(arena.free_bytes() == 512-8*(emu::max_blocks-1));
+}
 int main() {
+    watch_allocations = true;
+    fragmentation_and_descriptors();
     reuse_and_coalesce();
     first_fit_split();
-    watch_allocations = true;
     static_regions();
     capacity_and_idle();
     boundaries_and_blocking();
