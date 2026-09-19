@@ -1,8 +1,10 @@
 #include "emulator/model.hpp"
 #include "emulator/scheduler.hpp"
 #include "emulator/memory.hpp"
+#include "emulator/replay.hpp"
 #include <cstdlib>
 #include <new>
+#include <string_view>
 #include "allocation_guard.hpp"
 #include <iostream>
 #include <limits>
@@ -144,8 +146,22 @@ void fragmentation_and_descriptors() {
     CHECK(arena.allocate(8).reason == emu::Allocation::descriptors);
     CHECK(arena.free_bytes() == 512-8*(emu::max_blocks-1));
 }
+void replay_failure_lifetime() {
+    static emu::Replay r;
+    std::array<std::size_t,emu::max_tasks> maxima{}; maxima[0] = 16;
+    CHECK(r.init(emu::MemoryPolicy::bounded_first_fit,maxima,1,8) == emu::Status::ready);
+    CHECK(r.apply({0,1,0,16,true}).outcome == std::string_view("capacity"));
+    CHECK(r.apply({1,1,0,0,false}).outcome == std::string_view("skipped_free"));
+    CHECK(r.finish() && r.metrics.failures == 1 && r.metrics.skipped_frees == 1);
+    CHECK(r.init(emu::MemoryPolicy::static_reservation,maxima,1,8) == emu::Status::memory_rejected);
+    CHECK(r.init(emu::MemoryPolicy::static_reservation,maxima,1,16) == emu::Status::ready);
+    CHECK(r.apply({0,2,0,8,true}).live == 8);
+    CHECK(r.apply({1,2,0,0,false}).unused == 16);
+    CHECK(r.finish() && r.metrics.peak_live == 8 && r.metrics.peak_occupied == 16);
+}
 int main() {
     watch_allocations = true;
+    replay_failure_lifetime();
     fragmentation_and_descriptors();
     reuse_and_coalesce();
     first_fit_split();
