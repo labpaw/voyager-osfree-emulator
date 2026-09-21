@@ -4,7 +4,7 @@
 #include <stdexcept>
 namespace host {
 static std::vector<std::string> split(const std::string& line) {
-    // Input schemas have numeric fields only, so quoted fields aren't needed.
+    // Input fields are integers or fixed operation names; quoted fields are unsupported.
     std::vector<std::string> row;
     std::size_t start = 0;
     for (;;) {

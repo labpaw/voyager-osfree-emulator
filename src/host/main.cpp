@@ -1,5 +1,6 @@
 #include "io.hpp"
 #include "export.hpp"
+#include "memory_cli.hpp"
 #include "emulator/scheduler.hpp"
 #include <filesystem>
 #include <iostream>
@@ -8,14 +9,16 @@
 
 int main(int argc, char** argv) {
     try {
-        if (argc < 2 || std::string(argv[1]) != "schedule") throw std::runtime_error("usage: emulator schedule --tasks FILE --horizon T --budget B --out DIR [--run-id ID] [--jobs 0|1]");
+        if (argc < 2 || (std::string(argv[1]) != "schedule" && std::string(argv[1]) != "memory")) throw std::runtime_error("usage: emulator schedule --tasks FILE --horizon T --budget B --out DIR [--run-id ID] [--jobs 0|1]");
         std::map<std::string, std::string> args;
         for (int i = 2; i < argc; i += 2) {
             if (i + 1 == argc) throw std::runtime_error("option needs value");
             const std::string key = argv[i];
-            if (key != "--tasks" && key != "--horizon" && key != "--budget" && key != "--out" && key != "--run-id" && key != "--jobs") throw std::runtime_error("unknown option: " + key);
+            if (key != "--tasks" && key != "--horizon" && key != "--budget" && key != "--out" && key != "--run-id" && key != "--jobs" && key != "--trace" && key != "--policy") throw std::runtime_error("unknown option: " + key);
             if (!args.emplace(key, argv[i+1]).second) throw std::runtime_error("duplicate option");
         }
+        if (std::string(argv[1]) == "memory") return host::run_memory(args);
+        if (args.count("--trace") || args.count("--policy")) throw std::runtime_error("unsupported schedule option");
         for (auto key : {"--tasks","--horizon","--budget","--out"}) if (!args.count(key)) throw std::runtime_error(std::string("missing ") + key);
         const std::string id = args.count("--run-id") ? args.at("--run-id") : "single";
         if (!host::valid_id(id)) throw std::runtime_error("run ID must contain letters, digits, underscores or hyphens");
