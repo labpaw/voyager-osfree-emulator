@@ -6,7 +6,7 @@ import platform
 import subprocess
 import sys
 from pathlib import Path
-from check_csv import check_schedule
+from check_csv import check_schedule, check_memory
 
 
 def digest(path):
@@ -24,11 +24,14 @@ def source_hash():
 
 
 def run_one(exe, item, folder):
-    command = [str(exe), 'schedule', '--tasks', item['input'], '--horizon', str(item['horizon']), '--budget', str(item['budget']), '--out', str(folder), '--run-id', item['id']]
+    command = [str(exe), 'schedule', '--tasks', item['input'], '--horizon', str(item.get('horizon',0)), '--budget', str(item['budget']), '--out', str(folder), '--run-id', item['id']]
+    if item['kind'] == 'memory':
+        command = [str(exe), 'memory', '--trace', item['input'], '--policy', item['policy'],
+                   '--budget', str(item['budget']), '--out', str(folder), '--run-id', item['id']]
     done = subprocess.run(command, capture_output=True, text=True)
     if done.returncode not in (0, 3):
         raise RuntimeError('%s: %s %s' % (item['id'], done.stdout, done.stderr))
-    status = check_schedule(folder)
+    status = check_memory(folder) if item['kind'] == 'memory' else check_schedule(folder)
     assert (done.returncode == 3) == (status == 'memory_rejected')
     return command, status
 

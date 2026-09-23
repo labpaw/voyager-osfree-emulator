@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 from workloads import family, write_tasks, write_csv
+from memory_traces import traces
 
 
 def e1():
@@ -52,8 +53,20 @@ def blocking_and_sensitivity():
     return plan
 
 
+def memory_plan():
+    plan = []
+    for family_name, seed, path in traces():
+        for budget in (512,1024,1536,2048,2560,4096):
+            for policy in ('static_reservation','bounded_first_fit'):
+                name = 'e3_%s_s%d_b%d_%s' % (family_name,seed,budget,policy)
+                plan.append(dict(id=name,group='e3',kind='memory',input=path,policy=policy,
+                                 budget=budget,seed=seed,family=family_name,
+                                 smoke=(seed in (0,1) and budget in (512,1024,2560,4096))))
+    return plan
+
+
 def main():
-    plan = e1() + blocking_and_sensitivity()
+    plan = e1() + blocking_and_sensitivity() + memory_plan()
     Path('configs/experiments.json').write_text(json.dumps({'schema_version':1, 'generator':'xorshift32-v1', 'runs':plan}, indent=2)+'\n')
     print('Prepared', len(plan), 'experiments')
 
