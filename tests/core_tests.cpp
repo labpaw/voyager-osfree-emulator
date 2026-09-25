@@ -159,8 +159,22 @@ void replay_failure_lifetime() {
     CHECK(r.apply({1,2,0,0,false}).unused == 16);
     CHECK(r.finish() && r.metrics.peak_live == 8 && r.metrics.peak_occupied == 16);
 }
+void integrated_regions() {
+    static emu::Scheduler s;
+    emu::Config c; c.count = 1; c.horizon = 6; c.budget = 16;
+    c.tasks[0] = {1, 2, 2, 1, 0, 16, 0};
+    CHECK(s.init(c) == emu::Status::ready);
+    while (s.status == emu::Status::ready) s.step();
+    const auto measured = s.metrics;
+    CHECK(s.memory.lookups == 4*measured.completed);
+    c.tasks[0].memory = 0;
+    CHECK(s.init(c) == emu::Status::ready);
+    while (s.status == emu::Status::ready) s.step();
+    CHECK(s.metrics.busy == measured.busy && s.metrics.missed == measured.missed && s.metrics.max_response == measured.max_response);
+}
 int main() {
     watch_allocations = true;
+    integrated_regions();
     replay_failure_lifetime();
     fragmentation_and_descriptors();
     reuse_and_coalesce();

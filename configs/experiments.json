@@ -5726,6 +5726,50 @@
       "seed": 0,
       "family": "fragmentation_fixture",
       "smoke": true
+    },
+    {
+      "id": "e4_u60_b1024",
+      "group": "e4",
+      "kind": "schedule",
+      "input": "configs/generated/e4_u60_b1024.csv",
+      "horizon": 100000,
+      "budget": 1024,
+      "nominal": 0.6,
+      "seed": 1,
+      "smoke": true
+    },
+    {
+      "id": "e4_u60_b1536",
+      "group": "e4",
+      "kind": "schedule",
+      "input": "configs/generated/e4_u60_b1536.csv",
+      "horizon": 100000,
+      "budget": 1536,
+      "nominal": 0.6,
+      "seed": 1,
+      "smoke": true
+    },
+    {
+      "id": "e4_u100_b1024",
+      "group": "e4",
+      "kind": "schedule",
+      "input": "configs/generated/e4_u100_b1024.csv",
+      "horizon": 100000,
+      "budget": 1024,
+      "nominal": 1.0,
+      "seed": 1,
+      "smoke": true
+    },
+    {
+      "id": "e4_u100_b1536",
+      "group": "e4",
+      "kind": "schedule",
+      "input": "configs/generated/e4_u100_b1536.csv",
+      "horizon": 100000,
+      "budget": 1536,
+      "nominal": 1.0,
+      "seed": 1,
+      "smoke": true
     }
   ]
 }

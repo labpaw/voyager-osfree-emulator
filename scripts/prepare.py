@@ -65,8 +65,21 @@ def memory_plan():
     return plan
 
 
+def integrated():
+    sets, _ = family(5,1)
+    plan = []
+    for load in (60,100):
+        for budget in (1024,1536):
+            name = 'e4_u%d_b%d' % (load,budget)
+            path = 'configs/generated/%s.csv' % name
+            write_tasks(path,sets[load])
+            plan.append(dict(id=name,group='e4',kind='schedule',input=path,horizon=100000,
+                             budget=budget,nominal=load/100,seed=1,smoke=True))
+    return plan
+
+
 def main():
-    plan = e1() + blocking_and_sensitivity() + memory_plan()
+    plan = e1() + blocking_and_sensitivity() + memory_plan() + integrated()
     Path('configs/experiments.json').write_text(json.dumps({'schema_version':1, 'generator':'xorshift32-v1', 'runs':plan}, indent=2)+'\n')
     print('Prepared', len(plan), 'experiments')
 

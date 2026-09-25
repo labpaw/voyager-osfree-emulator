@@ -23,7 +23,8 @@ bool StaticArena::write(std::size_t owner, std::size_t offset, std::uint8_t valu
     data[regions[owner].offset + offset] = value;
     return true;
 }
-bool StaticArena::read(std::size_t owner, std::size_t offset, std::uint8_t& value) const {
+bool StaticArena::read(std::size_t owner, std::size_t offset, std::uint8_t& value) {
+    ++lookups;
     if (!access(owner, offset, 1)) return false;
     value = data[regions[owner].offset + offset];
     return true;

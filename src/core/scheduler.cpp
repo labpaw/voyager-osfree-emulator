@@ -75,6 +75,16 @@ Completion Scheduler::step() {
             if (pa < pb || (pa == pb && a.sequence < b.sequence)) running = i;
         }
         auto& job = jobs[running];
+        const auto bytes = config.tasks[job.task].memory;
+        if (bytes) {
+            const auto value = static_cast<std::uint8_t>(job.sequence & 255);
+            std::uint8_t first = 0, last = 0;
+            if (!memory.write(job.task,0,value) || !memory.write(job.task,bytes-1,value) ||
+                !memory.read(job.task,0,first) || !memory.read(job.task,bytes-1,last) || first != value || last != value) {
+                status = Status::access_error; metrics.unfinished = count; metrics.end = now;
+                return result;
+            }
+        }
         job.started = true; job.first_start = now;
         ++metrics.dispatches;
     }
