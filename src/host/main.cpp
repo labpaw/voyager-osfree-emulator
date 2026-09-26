@@ -1,6 +1,7 @@
 #include "io.hpp"
 #include "export.hpp"
 #include "memory_cli.hpp"
+#include "info.hpp"
 #include "emulator/scheduler.hpp"
 #include <filesystem>
 #include <iostream>
@@ -9,6 +10,7 @@
 
 int main(int argc, char** argv) {
     try {
+        if (argc == 2 && std::string(argv[1]) == "info") { host::print_info(); return 0; }
         if (argc < 2 || (std::string(argv[1]) != "schedule" && std::string(argv[1]) != "memory")) throw std::runtime_error("usage: emulator schedule --tasks FILE --horizon T --budget B --out DIR [--run-id ID] [--jobs 0|1]");
         std::map<std::string, std::string> args;
         for (int i = 2; i < argc; i += 2) {

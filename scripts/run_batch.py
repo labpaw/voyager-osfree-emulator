@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import platform
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -50,10 +51,11 @@ def main():
                     source_revision=revision, source_sha256=source_hash(),
                     dirty=bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip()),
                     platform=platform.platform(), python=sys.version,
-                    compiler=subprocess.check_output(['c++','--version'],text=True),
+                    build=json.loads(subprocess.check_output([str(args.exe.resolve()),'info'],text=True)),
                     binary_sha256=digest(args.exe),
-                    capacities=dict(tasks=16,jobs=1024,arena_bytes=65536),
+                    plan_sha256=digest('configs/experiments.json'), cwd=str(Path.cwd()),
                     command=sys.argv, runs=[])
+    shutil.copyfile('configs/tasksets.csv',args.out/'tasksets.csv')
     target = args.out / 'manifest.json'
     for item in selected:
         manifest['runs'].append(dict(item, input_sha256=digest(item['input']), status='pending'))
@@ -61,8 +63,11 @@ def main():
     for i, entry in enumerate(manifest['runs']):
         folder = args.out / entry['group'] / entry['id']
         try:
+            assert digest(entry['input']) == entry['input_sha256']
             command, status = run_one(args.exe.resolve(), entry, folder)
-            entry.update(status=status, command=command, output=str(folder.relative_to(args.out)))
+            assert digest(entry['input']) == entry['input_sha256']
+            entry.update(status=status, command=command, output=str(folder.relative_to(args.out)),
+                         output_sha256={p.name:digest(p) for p in sorted(folder.iterdir())})
         except Exception as error:
             entry.update(status='unexpected_failure', reason=str(error))
             target.write_text(json.dumps(manifest,indent=2)+'\n')
