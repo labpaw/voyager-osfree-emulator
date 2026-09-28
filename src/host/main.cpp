@@ -10,16 +10,24 @@
 
 int main(int argc, char** argv) {
     try {
+        if (argc == 2 && std::string(argv[1]) == "--help") {
+            std::cout << "emulator schedule --tasks FILE --horizon T --budget B --out DIR [--run-id ID] [--jobs 0|1] [--scheduler cooperative_rm] [--memory-policy static_reservation]\n"
+                         "emulator memory --trace FILE --policy static_reservation|bounded_first_fit --budget B --out DIR [--run-id ID]\n"
+                         "emulator info\nOutput directory must be new. Input examples: configs/fixtures and configs/traces.\n";
+            return 0;
+        }
         if (argc == 2 && std::string(argv[1]) == "info") { host::print_info(); return 0; }
         if (argc < 2 || (std::string(argv[1]) != "schedule" && std::string(argv[1]) != "memory")) throw std::runtime_error("usage: emulator schedule --tasks FILE --horizon T --budget B --out DIR [--run-id ID] [--jobs 0|1]");
         std::map<std::string, std::string> args;
         for (int i = 2; i < argc; i += 2) {
             if (i + 1 == argc) throw std::runtime_error("option needs value");
             const std::string key = argv[i];
-            if (key != "--tasks" && key != "--horizon" && key != "--budget" && key != "--out" && key != "--run-id" && key != "--jobs" && key != "--trace" && key != "--policy") throw std::runtime_error("unknown option: " + key);
+            if (key != "--tasks" && key != "--horizon" && key != "--budget" && key != "--out" && key != "--run-id" && key != "--jobs" && key != "--trace" && key != "--policy" && key != "--scheduler" && key != "--memory-policy") throw std::runtime_error("unknown option: " + key);
             if (!args.emplace(key, argv[i+1]).second) throw std::runtime_error("duplicate option");
         }
         if (std::string(argv[1]) == "memory") return host::run_memory(args);
+        if (args.count("--scheduler") && args.at("--scheduler") != "cooperative_rm") throw std::runtime_error("only cooperative_rm is implemented");
+        if (args.count("--memory-policy") && args.at("--memory-policy") != "static_reservation") throw std::runtime_error("schedule mode uses static_reservation");
         if (args.count("--trace") || args.count("--policy")) throw std::runtime_error("unsupported schedule option");
         for (auto key : {"--tasks","--horizon","--budget","--out"}) if (!args.count(key)) throw std::runtime_error(std::string("missing ") + key);
         const std::string id = args.count("--run-id") ? args.at("--run-id") : "single";
