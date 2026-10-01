@@ -1,0 +1,22 @@
+Apple clang version 21.0.0 (clang-2100.1.1.101)
+Per-function compiler estimate at -O3; not a measured whole call-chain high-water mark.
+src/core/memory.cpp:3:_ZN3emu11StaticArena4initERKNSt3__15arrayImLm16EEEmm	64	static
+src/core/memory.cpp:16:_ZNK3emu11StaticArena6accessEmmm	0	static
+src/core/memory.cpp:20:_ZN3emu11StaticArena5writeEmmh	0	static
+src/core/memory.cpp:26:_ZN3emu11StaticArena4readEmmRh	0	static
+src/core/memory.cpp:35:_ZN3emu15allocation_nameENS_10AllocationE	0	static
+src/core/memory.cpp:46:_ZN3emu12DynamicArena4initEm	32	static
+src/core/memory.cpp:54:_ZNK3emu12DynamicArena10free_bytesEv	0	static
+src/core/memory.cpp:59:_ZNK3emu12DynamicArena12largest_freeEv	0	static
+src/core/memory.cpp:64:_ZN3emu12DynamicArena8allocateEm	0	static
+src/core/memory.cpp:84:_ZN3emu12DynamicArena7releaseEm	0	static
+src/core/model.cpp:4:_ZN3emu11checked_addEyyRy	0	static
+src/core/model.cpp:11:_ZN3emu11status_nameENS_6StatusE	0	static
+src/core/model.cpp:23:_ZN3emu8validateERKNS_6ConfigERyS3_	0	static
+src/core/model.cpp:45:_ZN3emu17assign_prioritiesERNS_6ConfigE	0	static
+src/core/replay.cpp:4:_ZN3emu6Replay4initENS_12MemoryPolicyERKNSt3__15arrayImLm16EEEmm	48	static
+src/core/replay.cpp:18:_ZNK3emu6Replay8snapshotEv	64	static
+src/core/replay.cpp:36:_ZN3emu6Replay5applyERKNS_11MemoryEventE	48	static
+src/core/replay.cpp:74:_ZN3emu6Replay6finishEv	0	static
+src/core/scheduler.cpp:4:_ZN3emu9Scheduler4initERKNS_6ConfigE	176	static
+src/core/scheduler.cpp:23:_ZN3emu9Scheduler4stepEv	144	static

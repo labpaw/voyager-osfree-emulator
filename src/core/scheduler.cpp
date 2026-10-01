@@ -3,7 +3,8 @@
 namespace emu {
 Status Scheduler::init(const Config& input) {
     config = input;
-    metrics = {}; task_metrics = {}; sequence = {}; jobs = {};
+    metrics = {}; task_metrics = {}; sequence = {};
+    for (auto& job : jobs) job = {};
     count = 0; running = max_jobs; now = 0;
     Tick work = 0, admitted = 0;
     status = validate(config, work, admitted);
