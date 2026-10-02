@@ -1,0 +1,4 @@
+run_id,task_id,sequence,release,deadline,first_start,completion,response,waiting,tardiness,missed
+e0_blocking,2,0,0,20,0,7,7,0,0,0
+e0_blocking,1,0,1,6,7,8,7,6,2,1
+e0_blocking,1,1,6,11,8,9,3,2,0,0

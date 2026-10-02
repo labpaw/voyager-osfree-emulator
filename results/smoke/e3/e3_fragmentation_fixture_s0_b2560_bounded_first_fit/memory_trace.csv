@@ -1,0 +1,11 @@
+event_index,time,owner,request_id,operation,bytes,owner_maximum
+0,0,0,0,allocate,128,128
+1,1,1,1,allocate,128,128
+2,2,2,2,allocate,128,128
+3,3,3,3,allocate,128,128
+4,4,0,0,free,0,128
+5,5,2,2,free,0,128
+6,6,4,4,allocate,192,192
+7,7,1,1,free,0,128
+8,8,3,3,free,0,128
+9,9,4,4,free,0,192
