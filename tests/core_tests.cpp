@@ -81,7 +81,7 @@ void capacity_and_idle() {
     CHECK(s.init(c) == emu::Status::ready);
     while (s.status == emu::Status::ready) s.step();
     CHECK(s.metrics.idle == 3 && s.metrics.completed == 0);
-    c.horizon = 1030; c.tasks[0] = {1, 1, 1, 2000, 0, 0, 0};
+    c.horizon = emu::max_jobs+10; c.tasks[0] = {1, 1, 1, emu::max_jobs+10, 0, 0, 0};
     CHECK(s.init(c) == emu::Status::ready);
     while (s.status == emu::Status::ready) s.step();
     CHECK(s.status == emu::Status::job_capacity && s.metrics.released == emu::max_jobs);

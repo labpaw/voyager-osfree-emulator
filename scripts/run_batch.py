@@ -44,6 +44,12 @@ def main():
     parser.add_argument('--out', required=True, type=Path)
     args = parser.parse_args()
     plan = json.loads(Path('configs/experiments.json').read_text())
+    if Path('configs/frozen.json').exists():
+        frozen = json.loads(Path('configs/frozen.json').read_text())
+        assert frozen['plan_sha256'] == digest('configs/experiments.json'), 'plan changed since freeze'
+        assert frozen['tasksets_sha256'] == digest('configs/tasksets.csv')
+        for path,expected in frozen['inputs'].items():
+            assert digest(path) == expected, ('frozen input changed',path)
     selected = [r for r in plan['runs'] if args.profile == 'full' or r['smoke']]
     args.out.mkdir(parents=True, exist_ok=False)
     revision = subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip()
