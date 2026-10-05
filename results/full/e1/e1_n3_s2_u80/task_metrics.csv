@@ -1,0 +1,4 @@
+run_id,task_id,released,completed,missed,response_sum,waiting_sum,max_response,max_waiting,mean_response,mean_waiting
+e1_n3_s2_u80,1,125,125,0,38500,2125,308,17,308,17
+e1_n3_s2_u80,2,125,125,0,64375,55500,515,444,515,444
+e1_n3_s2_u80,3,2000,2000,1000,188625,154625,275,258,94.3125,77.3125
