@@ -1,0 +1,11 @@
+run_id,event_index,time,owner,request_id,operation,bytes,outcome,demand,live,occupied,free,largest_free,unused_reserved,padding,external_fragmentation,blocks_inspected,splits,coalesces,lookups
+e3_fragmentation_fixture_s0_b1536_bounded_first_fit,0,0,0,0,allocate,128,ok,128,128,128,1408,1408,NA,0,0,1,1,0,0
+e3_fragmentation_fixture_s0_b1536_bounded_first_fit,1,1,1,1,allocate,128,ok,256,256,256,1280,1280,NA,0,0,3,2,0,0
+e3_fragmentation_fixture_s0_b1536_bounded_first_fit,2,2,2,2,allocate,128,ok,384,384,384,1152,1152,NA,0,0,6,3,0,0
+e3_fragmentation_fixture_s0_b1536_bounded_first_fit,3,3,3,3,allocate,128,ok,512,512,512,1024,1024,NA,0,0,10,4,0,0
+e3_fragmentation_fixture_s0_b1536_bounded_first_fit,4,4,0,0,free,0,ok,384,384,384,1152,1024,NA,0,0.11111111111111116,11,4,0,0
+e3_fragmentation_fixture_s0_b1536_bounded_first_fit,5,5,2,2,free,0,ok,256,256,256,1280,1024,NA,0,0.19999999999999996,14,4,0,0
+e3_fragmentation_fixture_s0_b1536_bounded_first_fit,6,6,4,4,allocate,192,ok,448,448,448,1088,832,NA,0,0.23529411764705888,19,5,0,0
+e3_fragmentation_fixture_s0_b1536_bounded_first_fit,7,7,1,1,free,0,ok,320,320,320,1216,832,NA,0,0.31578947368421051,21,5,2,0
+e3_fragmentation_fixture_s0_b1536_bounded_first_fit,8,8,3,3,free,0,ok,192,192,192,1344,832,NA,0,0.38095238095238093,23,5,3,0
+e3_fragmentation_fixture_s0_b1536_bounded_first_fit,9,9,4,4,free,0,ok,0,0,0,1536,1536,NA,0,0,25,5,5,0
