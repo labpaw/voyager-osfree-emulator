@@ -1,0 +1,3 @@
+run_id,task_id,sequence,release,deadline,first_start,completion,response,waiting,tardiness,missed
+e0_ties,2,0,0,10,0,1,1,0,0,0
+e0_ties,8,0,0,10,1,2,2,1,0,0

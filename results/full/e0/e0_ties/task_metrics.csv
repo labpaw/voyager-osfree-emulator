@@ -1,0 +1,3 @@
+run_id,task_id,released,completed,missed,response_sum,waiting_sum,max_response,max_waiting,mean_response,mean_waiting
+e0_ties,8,1,1,0,2,1,2,1,2,1
+e0_ties,2,1,1,0,1,0,1,0,1,0
