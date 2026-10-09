@@ -1,0 +1,9 @@
+run_id,contiguous_cost,phase,actual_utilisation,high_max_response,high_max_waiting,high_missed,high_released
+e2_c2_o0,2,0,0.25,1,0,0,2000
+e2_c2_o1,2,1,0.25,2,1,0,2000
+e2_c4_o0,4,0,0.25,1,0,0,2000
+e2_c4_o1,4,1,0.25,4,3,0,2000
+e2_c8_o0,8,0,0.25,5,4,0,2000
+e2_c8_o1,8,1,0.25,8,7,63,2000
+e2_c12_o0,12,0,0.25,9,8,42,2000
+e2_c12_o1,12,1,0.25,12,11,84,2000

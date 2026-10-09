@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "batch": "results/full",
+  "manifest_sha256": "b5037874653d1334fdf2ca2d70bfd9909ef1b47e93261a43256ed610bba205d5",
+  "analysis_sha256": "bedc607dbd4d1571a3d2eefdacce7ceea36931fd2f3c6b26693359410f356c06",
+  "planned": 525,
+  "completed": 440,
+  "rejected": 85,
+  "incomplete": 0,
+  "input_revision": "845f9bffb7862b0cbe68999319b5deca78df8b6c"
+}
