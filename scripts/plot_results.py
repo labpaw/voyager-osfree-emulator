@@ -32,7 +32,8 @@ def plot(analysis,out):
             x = [float(r['actual_utilisation_median']) for r in agg]
             y = [float(r[field+'_median']) for r in agg]
             low = [float(r[field+'_min']) for r in agg]; high = [float(r[field+'_max']) for r in agg]
-            ax.plot(x,y,'o-',color='#243b53',markersize=4,label='Median of 10 seeds/load')
+            counts = '/'.join(sorted({r['distinct_inputs'] for r in agg}))
+            ax.plot(x,y,'o-',color='#243b53',markersize=4,label='Median of %s seeds/load'%counts)
             ax.vlines(x,low,high,color='#243b53',alpha=.5,label='Input min–max')
             bound = n*(2**(1/n)-1)
             ax.axvline(bound,ls='--',color='#b75c31',label='Liu–Layland reference')
@@ -80,7 +81,8 @@ def plot(analysis,out):
         axes[row,1].set_ylabel('Request failure fraction\n(admitted traces)')
         axes[row,2].set_ylabel('Peak occupied bytes\n(admitted traces)')
     axes[0,0].legend(fontsize=7)
-    fig.suptitle('Memory traces — %s\nMedian and min–max of 10 distinct traces; constant/fixture each use 1 canonical trace. Rejected traces have no runtime rates.'%batch,fontsize=10)
+    counts = '/'.join(sorted({r['distinct_inputs'] for r in memory if r['family'] in ('staggered','fragmentation')}))
+    fig.suptitle('Memory traces — %s\nMedian and min–max of %s distinct traces; constant/fixture each use 1 canonical trace. Rejected traces have no runtime rates.'%(batch,counts),fontsize=10)
     fig.tight_layout(); save(fig,out/'memory.png')
     (out/'plots.json').write_text(json.dumps(dict(batch=batch,analysis_sha256=digest(analysis/'analysis.json'),script_sha256=digest(__file__)),indent=2)+'\n')
     print('Saved plots:',out)

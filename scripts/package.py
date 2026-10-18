@@ -34,6 +34,7 @@ def package(path):
     files = sorted(files)
     revision = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
     manifest = dict(schema_version=1,source_revision=revision,
+                    source_dirty=bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip()),
                     scope='source, inputs, verification notes, full raw and derived evidence; no builds, caches or duplicate smoke batches',
                     archive_timestamps='normalised to ZIP epoch; not measurement dates',files={})
     path.parent.mkdir(parents=True,exist_ok=True)
