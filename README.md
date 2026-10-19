@@ -17,7 +17,7 @@ python3 -m venv .venv
 build/emulator info
 ```
 
-The recorded toolchain is Apple Clang 21.0.0 on arm64 macOS, Python 3.9.6, CMake 4.4.4 and Matplotlib 3.9.4. GCC was not used. The environment snapshot is in [docs/python-requirements.txt](docs/python-requirements.txt); [verification records](docs/verification/) contain compiler/storage details, normal and sanitizer results, stack estimates and the capacity check.
+The recorded toolchain is Apple Clang 21.0.0 on arm64 macOS, Python 3.9.6, CMake 4.4.4 and Matplotlib 3.9.4. GCC was not used. Build and environment information is recorded in the full batch manifest.
 
 Optional sanitizer build:
 
@@ -68,19 +68,11 @@ This check passed for 62 runs and 216 byte-identical raw files. Core heap/depend
 
 ## Saved evidence
 
-[results/full](results/full/) contains the complete batch, including all completed job records and copied memory traces. [Findings](docs/findings.md) explain the numbers and limits; [analysis](results/full/analysis/) holds summaries and [plots](results/full/plots/) holds four figures.
+[results/full](results/full/) contains the complete batch, including all completed job records and copied memory traces. [Analysis](results/full/analysis/) holds the summaries and [plots](results/full/plots/) holds four figures.
 
 At the same 25% total utilisation, increasing contiguous low-priority work increased high-priority response and caused misses. Static reservations were predictable when admitted, while staggered lifetimes let first-fit reuse a much smaller arena. First-fit also showed genuine fragmentation failures. The integrated example worked as specified and still missed deadlines at the selected loads. None of this establishes flight reliability or a universal schedulability limit.
 
 The Liu–Layland value is a labelled theoretical reference for **preemptive** rate-monotonic assumptions, not a cooperative pass/fail threshold. Payload budgets exclude fixed metadata and do not shrink the compiled backing arrays.
-
-- [Results explained in plain language](docs/results-explained.md)
-- [File and folder walkthrough](docs/project-guide.md)
-- [Design and storage boundary](docs/design.md)
-- [Methodology and generator rules](docs/methodology.md)
-- [Data dictionary and status rules](docs/data-dictionary.md)
-- [Decisions](docs/decisions.md), [limitations and future work](docs/limitations.md)
-- [Artifact inventory](docs/inventory.md)
 
 ## Package
 
@@ -89,6 +81,6 @@ The Liu–Layland value is a labelled theoretical reference for **preemptive** r
 .venv/bin/python scripts/package.py --check artifacts/voyager-emulator-evidence.zip
 ```
 
-The archive includes source, inputs, tests, scripts, documentation, full raw data, summaries and figures with a file hash inventory. Build directories, local environments, caches and duplicate smoke batches are excluded.
+The archive includes source, inputs, tests, scripts, the README, full raw data, summaries and figures with a file hash inventory. Build directories, local environments, caches and duplicate smoke batches are excluded.
 
-The original build history has 45 logical milestones with assigned dates spanning 17 August–19 October 2026. These are retrospective dates requested for the personal project; implementation and measurements were performed on 19 October. See the decisions note. Optional preemptive scheduling, segmented yields and hardware validation remain future work.
+The original build history has 45 logical milestones with assigned dates spanning 17 August–19 October 2026. These are retrospective dates requested for the personal project; implementation and measurements were performed on 19 October. Optional preemptive scheduling, segmented yields and hardware validation remain future work.

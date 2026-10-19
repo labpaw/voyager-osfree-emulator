@@ -22,7 +22,7 @@ with tempfile.TemporaryDirectory(prefix='irp-capacity-') as tmp:
         r, = rows(folder/'runs.csv')
         assert status == 'complete' and int(r['peak_jobs']) <= build['jobs']
         report.append([item['id'],item['horizon'],r['peak_jobs'],r['backlog'],r['released'],r['completed'],status])
-write_csv('docs/verification/capacity.csv',['run_id','horizon','peak_jobs','backlog','released','completed','status'],report)
+write_csv('results/local-capacity-check/capacity.csv',['run_id','horizon','peak_jobs','backlog','released','completed','status'],report)
 frozen = dict(schema_version=1,plan_sha256=digest('configs/experiments.json'),
               tasksets_sha256=digest('configs/tasksets.csv'),build=build,
               inputs={r['input']:digest(r['input']) for r in plan['runs']})

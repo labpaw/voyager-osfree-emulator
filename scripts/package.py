@@ -29,13 +29,13 @@ def check(path):
 def package(path):
     if path.exists(): raise FileExistsError(path)
     files = [Path(p) for p in ('README.md','CMakeLists.txt','IRP_Emulator_Codex_Build_Plan.md','.gitignore')]
-    for base in ('include','src','tests','scripts','configs','docs','results/full'):
+    for base in ('include','src','tests','scripts','configs','results/full'):
         files.extend(p for p in Path(base).rglob('*') if p.is_file() and '__pycache__' not in p.parts and not p.name.endswith('.pyc'))
     files = sorted(files)
     revision = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
     manifest = dict(schema_version=1,source_revision=revision,
                     source_dirty=bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip()),
-                    scope='source, inputs, verification notes, full raw and derived evidence; no builds, caches or duplicate smoke batches',
+                    scope='source, inputs, full raw and derived evidence; no builds, caches or duplicate smoke batches',
                     archive_timestamps='normalised to ZIP epoch; not measurement dates',files={})
     path.parent.mkdir(parents=True,exist_ok=True)
     with zipfile.ZipFile(path,'x',compression=zipfile.ZIP_DEFLATED,compresslevel=6) as archive:
