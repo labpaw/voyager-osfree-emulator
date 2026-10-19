@@ -104,6 +104,7 @@ Emulator/
 │
 ├── docs/                              Explanations and recorded verification
 │   ├── project-guide.md               This walkthrough
+│   ├── results-explained.md            Plain-language interpretation of results
 │   ├── design.md
 │   ├── methodology.md
 │   ├── data-dictionary.md
@@ -374,6 +375,7 @@ These summaries and figures are derived from raw data. They are not additional i
 | `docs/data-dictionary.md` | You want every raw/derived column, status and accounting convention explained. |
 | `docs/decisions.md` | You want the recorded implementation choices, capacity change, cleanup and history-date explanation. |
 | `docs/timelines.md` | You want small scheduling examples that can be checked by hand. |
+| `docs/results-explained.md` | You want the results, tables and graphs explained step by step in plain language. |
 | `docs/findings.md` | You want numerical observations from the completed batch and their interpretation. |
 | `docs/limitations.md` | You want what was not modelled, what was not verified and possible future work. |
 | `docs/inventory.md` | You want a delivery checklist and the evidence/package contents. |
