@@ -1,3 +1,0 @@
-run_id,task_id,released,completed,missed,response_sum,waiting_sum,max_response,max_waiting,mean_response,mean_waiting
-e0_blocking,1,2,2,1,10,8,7,6,5,4
-e0_blocking,2,1,1,0,7,0,7,0,7,0

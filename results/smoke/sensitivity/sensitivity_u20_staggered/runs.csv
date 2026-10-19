@@ -1,2 +1,0 @@
-run_id,scheduler,memory_policy,budget,horizon,status,released,completed,on_time,missed,busy,idle,backlog,peak_jobs,drain_ticks,drain_busy,unfinished,max_response,miss_rate,cpu_utilisation,actual_utilisation,ll_reference,dispatches,scans,required_static_bytes,reserved_payload,padding,accesses,detailed_jobs
-sensitivity_u20_staggered,cooperative_rm,static_reservation,4096,200000,complete,9250,9250,9000,250,41500,158500,0,3,0,0,0,60,0.027027027027027029,0.20749999999999999,0.20750000000000002,0.74349177498517549,9250,10250,1280,1280,0,37000,1

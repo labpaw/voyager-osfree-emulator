@@ -1,2 +1,0 @@
-run_id,scheduler,memory_policy,budget,horizon,status,released,completed,on_time,missed,busy,idle,backlog,peak_jobs,drain_ticks,drain_busy,unfinished,max_response,miss_rate,cpu_utilisation,actual_utilisation,ll_reference,dispatches,scans,required_static_bytes,reserved_payload,padding,accesses,detailed_jobs
-e4_u100_b1536,cooperative_rm,static_reservation,1536,100000,complete,4625,4625,1689,2936,100000,0,2,15,125,125,0,757,0.63481081081081081,1,1.00125,0.74349177498517549,4625,30166,1280,1280,0,18500,1

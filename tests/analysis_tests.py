@@ -5,7 +5,7 @@ import tempfile
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from analyze import analyze, count_outcomes
-from check_csv import rows
+from check_csv import rows, find_run_files
 
 assert count_outcomes([{'status':'complete'},{'status':'memory_rejected'},{'status':'job_capacity'},{'status':'pending'}]) == [1,1,2]
 with tempfile.TemporaryDirectory() as tmp:
@@ -18,4 +18,13 @@ with tempfile.TemporaryDirectory() as tmp:
     memory, = rows(tmp/'derived/memory_summary.csv')
     assert schedule['completed'] == '0' and schedule['incomplete'] == '1' and schedule['miss_rate_median'] == 'NA'
     assert memory['completed'] == '0' and memory['incomplete'] == '1' and memory['admission_fraction'] == 'NA'
+    # Derived exports can share a raw filename and contain multiple runs.
+    (tmp/'derived/memory_runs.csv').write_text('run_id,policy\nfirst,bounded_first_fit\nsecond,bounded_first_fit\n')
+    raw = tmp/'raw'
+    raw.mkdir()
+    for name in ('runs.csv','memory_runs.csv'):
+        (raw/name).touch()
+    schedule_files, memory_files = find_run_files(tmp)
+    assert schedule_files == [raw/'runs.csv']
+    assert memory_files == [raw/'memory_runs.csv']
 print('Incomplete and pending runs remain excluded and counted')

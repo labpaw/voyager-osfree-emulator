@@ -1,4 +1,0 @@
-run_id,task_id,released,completed,missed,response_sum,waiting_sum,max_response,max_waiting,mean_response,mean_waiting
-e1_n3_s1_u20,1,2000,2000,0,8000,0,4,0,4,0
-e1_n3_s1_u20,2,500,500,0,9000,2000,18,4,18,4
-e1_n3_s1_u20,3,125,125,0,6250,2250,50,18,50,18

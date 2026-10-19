@@ -1,4 +1,0 @@
-run_id,task_id,sequence,release,deadline,first_start,completion,response,waiting,tardiness,missed
-e0_single,1,0,0,5,0,2,2,0,0,0
-e0_single,1,1,5,10,5,7,2,0,0,0
-e0_single,1,2,10,15,10,12,2,0,0,0

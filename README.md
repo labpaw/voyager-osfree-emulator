@@ -89,4 +89,4 @@ The Liu–Layland value is a labelled theoretical reference for **preemptive** r
 
 The archive includes source, inputs, tests, scripts, documentation, full raw data, summaries and figures with a file hash inventory. Build directories, local environments, caches and duplicate smoke batches are excluded.
 
-Git contains 45 logical milestones with assigned dates spanning 17 August–19 October 2026. These are retrospective dates requested for the personal project; implementation and measurements were performed on 19 October. See the decisions note. Optional preemptive scheduling, segmented yields and hardware validation remain future work.
+The original build history has 45 logical milestones with assigned dates spanning 17 August–19 October 2026. These are retrospective dates requested for the personal project; implementation and measurements were performed on 19 October. See the decisions note. Optional preemptive scheduling, segmented yields and hardware validation remain future work.

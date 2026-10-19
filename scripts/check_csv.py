@@ -147,12 +147,18 @@ def check_memory(folder):
     return run['status']
 
 
+def find_run_files(directory):
+    files = sorted(directory.rglob('runs.csv'))
+    memory_files = sorted(path for path in directory.rglob('memory_runs.csv')
+                          if not (path.parent / 'analysis.json').is_file())
+    return files, memory_files
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('directory', type=Path)
     args = parser.parse_args()
-    files = sorted(args.directory.rglob('runs.csv'))
-    memory_files = sorted(args.directory.rglob('memory_runs.csv'))
+    files, memory_files = find_run_files(args.directory)
     assert files or memory_files, 'no runs found'
     counts = {}
     for path in files:

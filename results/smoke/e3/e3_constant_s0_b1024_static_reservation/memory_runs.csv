@@ -1,2 +1,0 @@
-run_id,policy,budget,status,events,requests,successes,failures,skipped_frees,fragmentation_failures,capacity_failures,descriptor_failures,peak_demand,peak_live,peak_occupied,peak_unused_reserved,peak_padding,policy_metadata_bytes,replay_storage_bytes
-e3_constant_s0_b1024_static_reservation,static_reservation,1024,memory_rejected,0,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,296,132960
