@@ -74,6 +74,7 @@ At the same 25% total utilisation, increasing contiguous low-priority work incre
 
 The Liu–Layland value is a labelled theoretical reference for **preemptive** rate-monotonic assumptions, not a cooperative pass/fail threshold. Payload budgets exclude fixed metadata and do not shrink the compiled backing arrays.
 
+- [File and folder walkthrough](docs/project-guide.md)
 - [Design and storage boundary](docs/design.md)
 - [Methodology and generator rules](docs/methodology.md)
 - [Data dictionary and status rules](docs/data-dictionary.md)
