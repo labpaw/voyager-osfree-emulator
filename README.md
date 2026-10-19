@@ -6,7 +6,7 @@ The required implementation and full experiment batch are complete. There are **
 
 ## Build
 
-You need a C++17 compiler and Python 3. CMake and Matplotlib can live in a local virtual environment. Matplotlib is only needed for figures.
+You need a C++17 compiler and Python 3. `CMakeLists.txt` lists the C++ source files, selects C++17 and registers the four test suites. It is needed by the build commands below. CMake and Matplotlib can live in a local virtual environment; Matplotlib is only needed for figures.
 
 ```sh
 python3 -m venv .venv
@@ -64,7 +64,7 @@ To rebuild in a fresh directory whose path contains spaces, run the smoke batch 
 .venv/bin/python scripts/reproduce_smoke.py --cmake .venv/bin/cmake --out results/local-fresh
 ```
 
-This check passed for 62 runs and 216 byte-identical raw files. Core heap/dependency checks can be repeated with `python3 scripts/audit_core.py`; `python3 scripts/stack_usage.py` reports per-function compiler estimates, not measured total stack use.
+This check passed for 62 runs and 216 byte-identical raw files. Core heap/dependency checks can be repeated with `python3 scripts/audit_core.py`.
 
 ## Saved evidence
 
@@ -73,14 +73,5 @@ This check passed for 62 runs and 216 byte-identical raw files. Core heap/depend
 At the same 25% total utilisation, increasing contiguous low-priority work increased high-priority response and caused misses. Static reservations were predictable when admitted, while staggered lifetimes let first-fit reuse a much smaller arena. First-fit also showed genuine fragmentation failures. The integrated example worked as specified and still missed deadlines at the selected loads. None of this establishes flight reliability or a universal schedulability limit.
 
 The Liu–Layland value is a labelled theoretical reference for **preemptive** rate-monotonic assumptions, not a cooperative pass/fail threshold. Payload budgets exclude fixed metadata and do not shrink the compiled backing arrays.
-
-## Package
-
-```sh
-.venv/bin/python scripts/package.py --out artifacts/voyager-emulator-evidence.zip
-.venv/bin/python scripts/package.py --check artifacts/voyager-emulator-evidence.zip
-```
-
-The archive includes source, inputs, tests, scripts, the README, full raw data, summaries and figures with a file hash inventory. Build directories, local environments, caches and duplicate smoke batches are excluded.
 
 The original build history has 45 logical milestones with assigned dates spanning 17 August–19 October 2026. These are retrospective dates requested for the personal project; implementation and measurements were performed on 19 October. Optional preemptive scheduling, segmented yields and hardware validation remain future work.
