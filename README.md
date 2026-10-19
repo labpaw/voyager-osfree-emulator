@@ -1,12 +1,16 @@
+Here’s the cleaned-up version:
+
+---
+
 # Voyager-inspired OS-free emulator
 
-A small C++17 research project for trying cooperative scheduling and fixed memory budgets. It models one processor with integer ticks, while running on a normal host OS. Tasks run until completion; memory uses fixed task reservations or a bounded first-fit comparison. Execution costs are supplied inputs, not hardware measurements.
+A small C++17 research project looking at cooperative scheduling and fixed memory budgets. It models a single processor using integer ticks, but still runs on a normal host OS. Tasks run to completion. Memory can use either fixed task reservations or a bounded first-fit allocator for comparison. Execution costs are just input values. Nothing is measured from real hardware.
 
-The required implementation and full experiment batch are complete. There are **525 recorded outcomes: 440 completed runs and 85 expected static-memory admission rejections**, with no incomplete simulations. The code uses fixed arrays and short linear scans in the target core.
+The required implementation and the full experiment batch are done. There are **525 recorded outcomes**: 440 completed runs and 85 expected static-memory admission rejections. No incomplete simulations. The core uses fixed arrays and short linear scans.
 
 ## Build
 
-You need a C++17 compiler and Python 3. `CMakeLists.txt` lists the C++ source files, selects C++17 and registers the four test suites. It is needed by the build commands below. CMake and Matplotlib can live in a local virtual environment; Matplotlib is only needed for figures.
+You need a C++17 compiler and Python 3. `CMakeLists.txt` lists the sources, sets C++17 and registers the four test suites. CMake and Matplotlib can live in a local venv (Matplotlib is only needed for the figures).
 
 ```sh
 python3 -m venv .venv
@@ -17,7 +21,7 @@ python3 -m venv .venv
 build/emulator info
 ```
 
-The recorded toolchain is Apple Clang 21.0.0 on arm64 macOS, Python 3.9.6, CMake 4.4.4 and Matplotlib 3.9.4. GCC was not used. Build and environment information is recorded in the full batch manifest.
+Recorded toolchain was Apple Clang 21.0.0 on arm64 macOS, Python 3.9.6, CMake 4.4.4 and Matplotlib 3.9.4. GCC wasn’t used. Full build and environment details are in the batch manifest.
 
 Optional sanitizer build:
 
@@ -27,22 +31,29 @@ Optional sanitizer build:
 .venv/bin/ctest --test-dir build-sanitize --output-on-failure
 ```
 
-## Try a run
+## Trying a run
 
-Run commands from the repository root. Every output directory must be new; change its name to repeat a run. Quote paths containing spaces.
+Run everything from the repo root. Output directories must be new. Just change the name if you want to re-run something. Quote paths that contain spaces.
 
 ```sh
 build/emulator schedule --tasks configs/fixtures/blocking.csv --horizon 10 --budget 16 --out results/local-blocking --run-id blocking
 build/emulator memory --trace configs/traces/fragmentation_fixture.csv --policy bounded_first_fit --budget 512 --out results/local-memory --run-id memory
 ```
 
-The first example has one deadline miss caused by the long job blocking the short task. The second finishes replay but records a fragmentation-related allocation failure; a completed replay does not mean every allocation succeeded. Use `build/emulator --help` for the small CLI. Schedule mode supports `cooperative_rm` and `static_reservation`; memory mode selects either memory policy. `--jobs 0` can disable detailed completion rows without changing logical metrics.
+In the first example the long job blocks the short task and causes a deadline miss. The second finishes the replay but records a fragmentation-related allocation failure (a completed replay doesn’t mean every allocation succeeded). Use `build/emulator --help` for the small CLI. Schedule mode supports `cooperative_rm` and `static_reservation`. Memory mode picks the memory policy. `--jobs 0` turns off the detailed completion rows without changing the logical metrics.
 
-Exit codes: 0 complete, 2 parsing/host validation, 3 expected static-budget rejection, 4 invalid/incomplete core run, 5 output/filesystem error. The batch runner handles expected rejections and stops on unexpected failures.
+Exit codes:  
+0 = complete  
+2 = parsing/host validation  
+3 = expected static-budget rejection  
+4 = invalid/incomplete core run  
+5 = output/filesystem error  
+
+The batch runner treats expected rejections as normal and stops on unexpected failures.
 
 ## Experiments
 
-Inputs and a frozen grid are checked in. Preparation can be repeated with `python3 scripts/prepare.py`; generated task sets and traces are deterministic. `configs/frozen.json` protects the inputs used for the full evidence batch.
+Inputs and a frozen grid are checked in. You can regenerate the prepared sets with `python3 scripts/prepare.py` (they’re deterministic). `configs/frozen.json` locks the inputs used for the full evidence batch.
 
 ```sh
 .venv/bin/python scripts/run_batch.py --profile smoke --out results/local-smoke
@@ -56,22 +67,22 @@ Inputs and a frozen grid are checked in. Preparation can be repeated with `pytho
 .venv/bin/python scripts/plot_results.py results/local-full/analysis --out results/local-full/plots
 ```
 
-Smoke is a 62-cell subset. Full includes 240 load-sweep cells, eight blocking cells, 264 memory cells, four integrated cells, six sensitivity checks and three small validation cases. Each manifest records source/build details, exact commands, input hashes, statuses and raw file hashes. Analysis checks accounting and hashes before producing descriptive summaries. Rejected cases stay visible.
+Smoke is a 62-cell subset. Full has 240 load-sweep cells, eight blocking cells, 264 memory cells, four integrated cells, six sensitivity checks and three small validation cases. Each manifest records source/build details, exact commands, input hashes, statuses and raw file hashes. Analysis checks the accounting and hashes before producing the summaries. Rejected cases are kept visible.
 
-To rebuild in a fresh directory whose path contains spaces, run the smoke batch and compare all its raw files against saved full evidence:
+To rebuild in a fresh directory (even one with spaces in the path), run the smoke batch and compare the raw files against the saved full evidence:
 
 ```sh
 .venv/bin/python scripts/reproduce_smoke.py --cmake .venv/bin/cmake --out results/local-fresh
 ```
 
-This check passed for 62 runs and 216 byte-identical raw files. Core heap/dependency checks can be repeated with `python3 scripts/audit_core.py`.
+This check passed for 62 runs and 216 byte-identical raw files. Core heap/dependency checks can be re-run with `python3 scripts/audit_core.py`.
 
 ## Saved evidence
 
-[results/full](results/full/) contains the complete batch, including all completed job records and copied memory traces. [Analysis](results/full/analysis/) holds the summaries and [plots](results/full/plots/) holds four figures.
+[results/full](results/full/) contains the complete batch (all completed job records and the copied memory traces). Summaries are in [Analysis](results/full/analysis/) and the four figures are in [plots](results/full/plots/).
 
-At the same 25% total utilisation, increasing contiguous low-priority work increased high-priority response and caused misses. Static reservations were predictable when admitted, while staggered lifetimes let first-fit reuse a much smaller arena. First-fit also showed genuine fragmentation failures. The integrated example worked as specified and still missed deadlines at the selected loads. None of this establishes flight reliability or a universal schedulability limit.
+At the same 25% total utilisation, increasing contiguous low-priority work increased high-priority response time and caused misses. Static reservations were predictable when admitted. Staggered lifetimes let first-fit reuse a much smaller arena. First-fit also produced genuine fragmentation failures. The integrated example behaved as specified and still missed deadlines at the chosen loads. None of this claims flight reliability or a universal schedulability bound.
 
-The Liu–Layland value is a labelled theoretical reference for **preemptive** rate-monotonic assumptions, not a cooperative pass/fail threshold. Payload budgets exclude fixed metadata and do not shrink the compiled backing arrays.
+The Liu–Layland value is only a labelled theoretical reference for **preemptive** rate-monotonic assumptions. It is not a pass/fail threshold for the cooperative case. Payload budgets exclude fixed metadata and do not shrink the compiled backing arrays.
 
-The original build history has 45 logical milestones with assigned dates spanning 17 August–19 October 2026. These are retrospective dates requested for the personal project; implementation and measurements were performed on 19 October. Optional preemptive scheduling, segmented yields and hardware validation remain future work.
+---
